@@ -5,8 +5,13 @@ async function main() {
     showPosts(posts);
 }
 
+function showLoading() {
+    postsGroup.textContent = 'Loading...';
+}
+
 async function getPosts() {
     try {
+        showLoading();
         const res = await fetch('http://localhost:5000/api/posts');
         if (res.ok) {
             const { data: posts } = await res.json();
