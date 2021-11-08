@@ -4,7 +4,7 @@ const faker = require('faker');
 const seedPost = async () => {
     faker.locale = 'id_ID';
     const posts = [];
-    const imageProfiles = ['profile1.jpg', 'profile2.jpg', 'profile3.jpg', 'profile4.jpg'];
+    const imageProfiles = ['profile1.png', 'profile2.png', 'profile3.png', 'profile4.png'];
     for (let i = 0; i < 200; i++) {
         posts.push({
             username: faker.internet.userName(),
@@ -14,6 +14,7 @@ const seedPost = async () => {
         });
     }
     try {
+        await Post.destroy({ truncate: true, cascade: false });
         await Post.bulkCreate(posts);
     } catch (error) {
         console.log(error);
