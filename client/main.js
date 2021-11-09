@@ -1,9 +1,9 @@
 const postsGroup = document.querySelector('.posts-group');
 const loader = document.querySelector('.loader');
+const message = document.querySelector('.message');
 
 const limit = 5;
 let offset = 1;
-let total = 0;
 let requestOn = false;
 
 async function loadPosts() {
@@ -14,12 +14,16 @@ async function loadPosts() {
 
         showPosts(posts);
         offset += limit;
-        total = offset + limit;
 
-        console.log("offset", offset);
-        console.log("limit", limit);
-        console.log("total", total);
+        if (posts.length <= 0) {
+            showMessage('Posts was does not exist.')
+        }
     }
+}
+
+function showMessage(messageText = '') {
+    message.textContent = messageText;
+    message.classList.add('show');
 }
 
 function showLoader() {
