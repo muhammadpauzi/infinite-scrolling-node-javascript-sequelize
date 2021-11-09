@@ -1,23 +1,39 @@
 const postsGroup = document.querySelector('.posts-group');
+const loader = document.querySelector('.loader');
 
 const limit = 5;
 let offset = 1;
+let total = 0;
+let requestOn = false;
 
-function loadPosts() {
-    setTimeout(async () => {
+async function loadPosts() {
+    if (!requestOn) {
+        requestOn = true;
         const posts = await getPosts();
+        requestOn = false;
+
         showPosts(posts);
         offset += limit;
-    }, 500);
+        total = offset + limit;
+
+        console.log("offset", offset);
+        console.log("limit", limit);
+        console.log("total", total);
+    }
 }
 
-// function showLoading() {
-//     postsGroup.textContent = 'Loading...';
-// }
+function showLoader() {
+    loader.classList.add('show');
+
+    return function () {
+        return loader.classList.remove('show');
+    }
+}
+
 
 async function getPosts() {
+    const hideLoader = showLoader();
     try {
-        // showLoading();
         const res = await fetch(`http://localhost:5000/api/posts?limit=${limit}&offset=${offset}`);
         if (res.ok) {
             const { data: posts } = await res.json();
@@ -25,6 +41,8 @@ async function getPosts() {
         }
     } catch (error) {
         console.error(error);
+    } finally {
+        hideLoader();
     }
 }
 
@@ -54,10 +72,16 @@ function getPostElement({ image, username, content, like }) {
 }
 loadPosts();
 
-window.addEventListener('scroll', throttle(() => {
-    loadPosts();
-}, 1000), {
-    passive: true
+window.addEventListener('scroll', () => {
+    const {
+        scrollTop,
+        scrollHeight,
+        clientHeight
+    } = document.documentElement;
+
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
+        loadPosts();
+    }
 });
 
 function throttle(fn, wait) {

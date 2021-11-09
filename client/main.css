@@ -119,3 +119,14 @@ li{
     font-size: .9rem;
     line-height: 20px;
 }
+
+.loader{
+    padding: 0 0 5rem 0;
+    text-align: center;
+    display: none;
+    color: #FFF;
+}
+
+.loader.show{
+    display: block;
+}
